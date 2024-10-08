@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Slot Scanner</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        h1 {
+            color: #2c3e50;
+        }
+        #result {
+            background-color: #f4f4f4;
+            padding: 20px;
+            border-radius: 5px;
+            margin-top: 20px;
+        }
+        #slots {
+            color: #27ae60;
+            font-weight: bold;
+        }
+        #error {
+            color: #c0392b;
+        }
+        #nextUpdate {
+            font-style: italic;
+            color: #7f8c8d;
+        }
+    </style>
+</head>
+<body>
+    <h1>API Slot Scanner</h1>
+    <div id="result">Loading...</div>
+
+    <script>
+        const API_URL = "https://ttp.cbp.dhs.gov/schedulerapi/slot-availability?locationId=5020"; // Replace with your actual API URL
+        const REFRESH_INTERVAL = 30000; // 30 seconds
+
+        async function checkAPI() {
+            const resultDiv = document.getElementById('result');
+
+            try {
+                const response = await fetch(API_URL);
+                const data = await response.json();
+
+                const currentTime = new Date().toLocaleString();
+                let resultHTML = `<p>Last Updated: ${currentTime}</p>`;
+                resultHTML += `<p>Last Published Date: ${data.lastPublishedDate}</p>`;
+
+                if (data.availableSlots && data.availableSlots.length > 0) {
+                    resultHTML += `<p>Available Slots Found!</p>`;
+                    resultHTML += `<p>Slots: <span id="slots">${data.availableSlots.join(', ')}</span></p>`;
+                } else {
+                    resultHTML += `<p>No available slots at this time.</p>`;
+                }
+
+                const nextUpdateTime = new Date(Date.now() + REFRESH_INTERVAL).toLocaleString();
+                resultHTML += `<p id="nextUpdate">Next update at approximately: ${nextUpdateTime}</p>`;
+
+                resultDiv.innerHTML = resultHTML;
+            } catch (error) {
+                resultDiv.innerHTML = `<p id="error">Error checking API: ${error.message}</p>`;
+            }
+        }
+
+        // Initial check when the page loads
+        checkAPI();
+
+        // Set up auto-refresh
+        setInterval(checkAPI, REFRESH_INTERVAL);
+    </script>
+</body>
+</html>
