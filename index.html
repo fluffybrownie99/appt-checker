@@ -38,13 +38,21 @@
 <body>
     <h1>API Slot Scanner</h1>
     <div id="result">Loading...</div>
+    
+    <!-- Add audio element -->
+    <audio id="alertSound">
+        <source src="https://assets.mixkit.co/active_storage/sfx/952/952-preview.mp3" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
 
     <script>
-        const API_URL = "https://ttp.cbp.dhs.gov/schedulerapi/slot-availability?locationId=5020"; // Replace with your actual API URL
+        const API_URL = "https://ttp.cbp.dhs.gov/schedulerapi/slot-availability?locationId=5020";
         const REFRESH_INTERVAL = 30000; // 30 seconds
+        let previouslyAvailable = false;
 
         async function checkAPI() {
             const resultDiv = document.getElementById('result');
+            const alertSound = document.getElementById('alertSound');
 
             try {
                 const response = await fetch(API_URL);
@@ -57,8 +65,15 @@
                 if (data.availableSlots && data.availableSlots.length > 0) {
                     resultHTML += `<p>Available Slots Found!</p>`;
                     resultHTML += `<p>Slots: <span id="slots">${data.availableSlots.join(', ')}</span></p>`;
+                    
+                    // Play sound alert if slots weren't available before
+                    if (!previouslyAvailable) {
+                        alertSound.play();
+                    }
+                    previouslyAvailable = true;
                 } else {
                     resultHTML += `<p>No available slots at this time.</p>`;
+                    previouslyAvailable = false;
                 }
 
                 const nextUpdateTime = new Date(Date.now() + REFRESH_INTERVAL).toLocaleString();
