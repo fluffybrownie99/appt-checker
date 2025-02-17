@@ -97,6 +97,32 @@
         input:checked + .slider:before {
             transform: translateX(26px);
         }
+            
+        #testButton {
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+            display: inline-block;
+            text-align: center;
+        }
+    
+        #testButton:hover {
+            background-color: #2980b9;
+        }
+    
+        body.dark-mode #testButton {
+            background-color: #1abc9c;
+        }
+        
+        body.dark-mode #testButton:hover {
+            background-color: #16a085;
+        }
     </style>
 </head>
 <body>
@@ -109,7 +135,7 @@
     <h1>NEXUS Appointment Scanner for Blaine Location</h1>
     <h2>Will play an audio queue when an available slot is found.</h2>
     
-    <button id="testButton">Test Sound</button>
+    <button id="testButton" class="test-button">Test Sound</button>
 
     <div id="result">Loading...</div>
     
