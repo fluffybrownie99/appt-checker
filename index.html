@@ -108,6 +108,9 @@
     </div>
     <h1>NEXUS Appointment Scanner for Blaine Location</h1>
     <h2>Will play an audio queue when an available slot is found.</h2>
+    
+    <button id="testButton">Test Sound</button>
+
     <div id="result">Loading...</div>
     
     <audio id="alertSound">
@@ -119,6 +122,13 @@
         const API_URL = "https://ttp.cbp.dhs.gov/schedulerapi/slot-availability?locationId=5020";
         const REFRESH_INTERVAL = 15000; // 15 seconds
         let previouslyAvailable = false;
+        
+        const testButton = document.getElementById('testButton');
+        const alertSound = document.getElementById('alertSound');
+        
+        testButton.addEventListener('click', () => {
+            alertSound.play();
+        });
 
         async function checkAPI() {
             const resultDiv = document.getElementById('result');
